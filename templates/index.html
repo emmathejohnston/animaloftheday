@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal of the Day</title>
+   <style>
+    /* Global Styles */
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #1e1e1e;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+    }
+
+    p {
+        font-size: 1.2em;
+        opacity: 0.8;
+    }
+
+    /* Keep the Button Centered */
+    #buttonContainer {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    button {
+        background-color: #ff9800;
+        border: none;
+        padding: 15px 25px;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: transform 0.2s, background 0.3s;
+    }
+
+    button:hover {
+        background-color: #ffb74d;
+        transform: scale(1.05);
+    }
+
+    /* Animal Info Box */
+    #animalContainer {
+        margin-top: 10px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        display: inline-block;
+        max-width: 600px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+    }
+
+    #animalDisplay {
+        font-size: 2em;
+        margin-bottom: 15px;
+    }
+
+    /* Center the Main Animal Image */
+    #imageSection {
+        text-align: center;
+    }
+
+    #animalImage {
+        max-width: 100%;
+        max-height: 350px;
+        border-radius: 10px;
+        margin: 15px auto;
+        display: block;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Wikipedia Summary */
+    #wikiContainer {
+        margin-top: 20px;
+    }
+
+    #wikiSummary {
+        font-size: 1em;
+        line-height: 1.5;
+        text-align: left; /* Keep text left-aligned */
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    /* Center the "About This Animal" Heading */
+    #wikiContainer h2 {
+        text-align: center;
+    }
+
+    /* Center Wikipedia Thumbnail */
+    #wikiImage {
+        display: block;
+        margin: 10px auto; /* Centers the image */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Center Wikipedia Link */
+    #wikiLink {
+        color: white;
+        font-weight: bold;
+        text-decoration: underline;
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    #wikiLink:hover {
+        color: #ffeb3b; /* Yellow hover effect */
+    }
+
+<style>
+    /* Image Section */
+    #imageSection {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    #animalImage {
+        max-width: 100%;
+        max-height: 350px;
+        border-radius: 10px;
+        display: block;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+    }
+
+    /* Placeholder Box for Missing Image */
+    #imagePlaceholder {
+        width: 100%;
+        max-width: 350px;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px dashed rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        font-size: 1.2em;
+        color: rgba(255, 255, 255, 0.7);
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        margin: 15px auto;
+    }
+</style>
+</head>
+<body>
+
+    <h1>🐾 Animal of the Day</h1>
+
+    <!-- Keep the button centered -->
+    <div id="buttonContainer">
+        <button onclick="getRandomAnimal()">🎲 Pick an Animal</button>
+    </div>
+
+    <div id="animalContainer" style="display:none;">
+        <div id="animalDisplay"></div>
+        <p id="loading" class="loading" style="display:none;">Fetching animal...</p>
+
+       <div id="imageSection">
+    		<img id="animalImage" src="" alt="Animal Image" style="display: none;">
+    <div id="imagePlaceholder" style="display: none;">No Image Found! 😢</div>
+	</div>
+
+        <div id="wikiContainer">
+            <h2>📖 About This Animal</h2>
+            <p id="wikiSummary">Fetching Wikipedia summary...</p>
+            <img id="wikiImage" src="" style="max-width: 100%; display: none;">
+            <p><a id="wikiLink" href="#" target="_blank" style="display:none;">Read more on Wikipedia</a></p>
+        </div>
+    </div>
+
+<script>
+function getRandomAnimal() {
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('animalContainer').style.display = 'none';
+
+    fetch('/random_animal')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('animalContainer').style.display = 'inline-block';
+
+            document.getElementById('animalDisplay').innerHTML =
+                `<strong>${data.vernacularName}</strong> (<i>${data.scientificName}</i>)`;
+
+            let imgElement = document.getElementById('animalImage');
+            let placeholder = document.getElementById('imagePlaceholder');
+
+            if (data.image) {
+                imgElement.src = data.image;
+                imgElement.style.display = "block";
+                placeholder.style.display = "none";  // Hide placeholder
+            } else {
+                imgElement.style.display = "none";
+                placeholder.style.display = "flex";  // Show placeholder
+            }
+
+            // Wikipedia Summary Handling
+            let wikiSummary = document.getElementById("wikiSummary");
+            let wikiLink = document.getElementById("wikiLink");
+            let wikiImage = document.getElementById("wikiImage");
+
+            if (data.wikipedia_summary) {
+                wikiSummary.innerHTML = data.wikipedia_summary;
+            } else {
+                wikiSummary.innerHTML = "No Wikipedia summary found.";
+            }
+
+            if (data.wikipedia_url) {
+                wikiLink.href = data.wikipedia_url;
+                wikiLink.style.display = "inline";
+                wikiLink.innerText = "Read more on Wikipedia";
+            } else {
+                wikiLink.style.display = "none";
+            }
+
+            if (data.wiki_image) {
+                wikiImage.src = data.wiki_image;
+                wikiImage.style.display = "block";
+            } else {
+                wikiImage.style.display = "none";
+            }
+        });
+}
+
+    </script>
+
+</body>
+</html>
