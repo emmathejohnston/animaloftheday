@@ -160,11 +160,6 @@ def index():
 
 @app.route("/random_animal")
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
 def random_animal():
     """API endpoint: Returns a random animal with image & Wikipedia summary."""
     random_entry = df.sample(n=1).iloc[0]
