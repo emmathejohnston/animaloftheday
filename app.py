@@ -3,8 +3,13 @@ import pandas as pd
 import random
 import requests
 import re 
+import os
 
 app = Flask(__name__)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
 
 # Load the preprocessed dataset once (fast!)
 df = pd.read_csv("animal_names.tsv", sep="\t")
