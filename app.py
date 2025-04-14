@@ -7,10 +7,6 @@ import os
 
 app = Flask(__name__)
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
 # Load the preprocessed dataset once (fast!)
 df = pd.read_csv("animal_names.tsv", sep="\t")
 
@@ -163,6 +159,12 @@ def index():
     return render_template("index.html")
 
 @app.route("/random_animal")
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+
 def random_animal():
     """API endpoint: Returns a random animal with image & Wikipedia summary."""
     random_entry = df.sample(n=1).iloc[0]
@@ -183,5 +185,9 @@ def random_animal():
         "wiki_image": wikipedia_data.get("wiki_image")
     })
 
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+    
 if __name__ == "__main__":
     app.run(debug=True)
